@@ -38,7 +38,11 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 
 TARGET_USE_VENDOR_CAMERA_EXT := true
 
+ifeq ($(TARGET_QCOM_IOT_LOW_RAM), true)
+BOARD_HAVE_QCOM_FM ?= false
+else
 BOARD_HAVE_QCOM_FM ?= true
+endif #TARGET_QCOM_IOT_LOW_RAM
 
 #Camera QC extends API
 #ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
@@ -671,35 +675,44 @@ PRODUCT_PACKAGES := \
     Bluetooth \
     DeskClock \
     AlarmProvider \
-    Calculator \
-    Calendar \
     Camera \
     CertInstaller \
     DrmProvider \
-    Email \
-    Gallery2 \
     LatinIME \
-    Music \
     netutils-wrapper-1.0 \
     Provision \
     Protips \
-    QuickSearchBox \
     Settings \
     Sync \
     SystemUI \
     Updater \
-    CalendarProvider \
     SyncProvider \
-    SoundRecorder \
     IM \
-    SnapdragonGallery \
-    VideoEditor \
     SnapdragonLauncher \
     FrameworksUtilsSysService \
     libqesdk_ndk_platform.qti
 
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM), true)
+PRODUCT_PACKAGES += \
+    DeskClock \
+    Calculator \
+    Calendar \
+    Email \
+    Gallery2 \
+    Music \
+    QuickSearchBox \
+    CalendarProvider \
+    SoundRecorder \
+    SnapdragonGallery \
+    VideoEditor
+endif #TARGET_QCOM_IOT_LOW_RAM
+
 ifeq ($(TARGET_HAS_LOW_RAM),true)
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM), true)
     DELAUN := Launcher3Go
+else
+    DELAUN := Launcher3QuickStepGo
+endif
 else
     # Live Wallpapers
     PRODUCT_PACKAGES += \
@@ -775,7 +788,9 @@ PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 PRODUCT_PACKAGES += $(STMLOG)
 PRODUCT_PACKAGES += $(THERMAL_HAL)
 PRODUCT_PACKAGES += $(TSLIB_EXTERNAL)
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM),true)
 PRODUCT_PACKAGES += $(VR_HAL)
+endif #TARGET_QCOM_IOT_LOW_RAM
 PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
