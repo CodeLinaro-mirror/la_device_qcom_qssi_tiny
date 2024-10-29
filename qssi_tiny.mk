@@ -40,6 +40,10 @@ TARGET_SKIP_OTA_PACKAGE := true
 # Enable AVB 2.0
 BOARD_AVB_ENABLE := true
 
+#iot project variant flag for qti memory optimizations
+TARGET_HAS_QTI_OPTIMIZATIONS := true
+TARGET_HAS_LOW_RAM := true
+
 #### Dynamic Partition Handling
 
 ####
@@ -110,10 +114,18 @@ $(call inherit-product, device/qcom/qssi_tiny/common64.mk)
 #Inherit all except heap growth limit from phone-xhdpi-2048-dalvik-heap.mk
 PRODUCT_PROPERTY_OVERRIDES  += \
      dalvik.vm.heapstartsize=8m \
+     dalvik.vm.heapminfree=512k
+ifneq ($(TARGET_HAS_QTI_OPTIMIZATIONS),true)
+PRODUCT_PROPERTY_OVERRIDES  += \
      dalvik.vm.heapsize=512m \
      dalvik.vm.heaptargetutilization=0.75 \
-     dalvik.vm.heapminfree=512k \
      dalvik.vm.heapmaxfree=8m
+else
+PRODUCT_PROPERTY_OVERRIDES  += \
+     dalvik.vm.heapsize=256m \
+     dalvik.vm.heaptargetutilization=0.85 \
+     dalvik.vm.heapmaxfree=6m
+endif #TARGET_HAS_QTI_OPTIMIZATIONS
 
 
 PRODUCT_NAME := $(VENDOR_QTI_DEVICE)
@@ -131,8 +143,11 @@ TARGET_USES_QCOM_BSP := false
 # RRO configuration
 TARGET_USES_RRO := true
 
+ifneq ($(TARGET_HAS_QTI_OPTIMIZATIONS),true)
 TARGET_USES_NQ_NFC := true
-
+else
+TARGET_USES_NQ_NFC := false
+endif #TARGET_HAS_QTI_OPTIMIZATIONS
 
 # default is nosdcard, S/W button enabled in resource
 PRODUCT_CHARACTERISTICS := nosdcard
@@ -151,6 +166,18 @@ TARGET_SYSTEM_PROP += device/qcom/qssi_tiny/system.prop
 
 TARGET_DISABLE_DASH := true
 TARGET_DISABLE_QTI_VPP := true
+
+ifeq ($(TARGET_HAS_QTI_OPTIMIZATIONS),true)
+PRODUCT_LOCALES := en_US
+WIDEVINE_ENABLE := false
+ENABLE_WIDEVINE_DRM := false
+TARGET_NOT_SUPPORT_VULKAN :=true
+TARGET_TELEPHONY_DATA_ONLY := true
+
+#Disable statsd for qti optimization
+PRODUCT_PROPERTY_OVERRIDES += \
+ro.statsd.enable=false
+endif #TARGET_HAS_QTI_OPTIMIZATIONS
 
 ifneq ($(TARGET_DISABLE_DASH), true)
     PRODUCT_BOOT_JARS += qcmediaplayer
@@ -219,8 +246,13 @@ PRODUCT_PACKAGES += \
     android.hardware.contexthub@1.0-service
 
 # system prop for enabling QFS (QTI Fingerprint Solution)
+ifneq ($(TARGET_HAS_QTI_OPTIMIZATIONS),true)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.qfp=true
+else
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.vendor.qfp=false
+endif #TARGET_HAS_QTI_OPTIMIZATIONS
 
 PRODUCT_SYSTEM_PROPERTIES += \
     persist.device_config.runtime_native_boot.iorap_perfetto_enable=true
@@ -230,10 +262,12 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
 
 #PASR HAL and APP
+ifneq ($(TARGET_HAS_QTI_OPTIMIZATIONS),true)
 PRODUCT_PACKAGES += \
     vendor.qti.power.pasrmanager@1.0-service \
     vendor.qti.power.pasrmanager@1.0-impl \
     pasrservice
+endif #TARGET_HAS_QTI_OPTIMIZATIONS
 
 # Kernel modules install path
 KERNEL_MODULES_INSTALL := dlkm

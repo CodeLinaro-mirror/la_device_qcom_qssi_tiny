@@ -37,4 +37,9 @@
        <item>"wifi_br0"</item>
    </string-array>
 
+   <bool name="config_device_volte_available">false</bool>
+   <bool name="config_supportsMultiDisplay">false</bool>
+   <bool name="config_supportsSplitScreenMultiWindow">false</bool>
+   <bool name="config_enableUpdateableTimeZoneRules">false</bool>
+   <bool name="config_supportsMultiWindow">false</bool>
 </resources>

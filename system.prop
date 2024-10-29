@@ -89,7 +89,7 @@ persist.data.df.iwlan_mux=9
 persist.data.df.dev_name=rmnet_usb0
 
 #property to enable user to access Google WFD settings
-persist.debug.wfd.enable=1
+persist.debug.wfd.enable=0
 ##property to choose between virtual/external wfd display
 persist.sys.wfd.virtual=0
 
@@ -168,3 +168,6 @@ arm64.memtag.process.system_server=off
 
 # Disable blur on app launch
 ro.launcher.blur.appLaunch=0
+
+# ro.product.memopt.enable for qti optimization.
+ro.product.memopt.enable=1
