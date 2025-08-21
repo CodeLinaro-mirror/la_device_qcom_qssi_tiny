@@ -14,9 +14,8 @@ persist.rild.nitz_short_ons_1=
 persist.rild.nitz_short_ons_2=
 persist.rild.nitz_short_ons_3=
 ril.subscription.types=NV,RUIM
-DEVICE_PROVISIONED=1
-# Set network mode to (NR_LTE_TDSCDMA_CDMA_EVDO_GSM_WCDMA, NR_LTE_TDSCDMA_CDMA_EVDO_GSM_WCDMA) for 8+8 mode device on DSDS mode
-ro.telephony.default_network=33,33
+# Set network mode to (NR_LTE_GSM_WCDMA, NR_LTE_GSM_WCDMA) for 8+8 mode device on DSDS mode
+ro.telephony.default_network=26,26
 
 dalvik.vm.heapsize=36m
 dalvik.vm.dex2oat64.enabled=true
@@ -149,9 +148,6 @@ persist.vendor.overlay.izat.optin=rro
 # Property for backup NTP Server
 persist.backup.ntpServer="0.pool.ntp.org"
 
-#Property to enable Mag filter
-persist.vendor.sensors.enable.mag_filter=true
-
 #Partition source order for Product/Build properties pickup.
 ro.product.property_source_order=odm,vendor,product,system_ext,system
 
@@ -168,3 +164,6 @@ arm64.memtag.process.system_server=off
 
 # Disable blur on app launch
 ro.launcher.blur.appLaunch=0
+
+#System Enable QCOM enhanced feature
+ro.vendor.qti.va_aosp.support=1
