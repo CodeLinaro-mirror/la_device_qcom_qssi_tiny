@@ -11,10 +11,6 @@ PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
 # Skip VINTF checks for kernel configs since we do not have kernel source
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 
-#Enable product partition Native I/F. It is automatically set to current if
-#the shipping API level for the target is greater than 29
-PRODUCT_PRODUCT_VNDK_VERSION := current
-
 RELAX_USES_LIBRARY_CHECK := true
 NEED_AIDL_NDK_PLATFORM_BACKEND := true
 
@@ -138,6 +134,8 @@ TARGET_USES_NQ_NFC := true
 PRODUCT_CHARACTERISTICS := nosdcard
 BOARD_FRP_PARTITION_NAME := frp
 
+PRODUCT_PACKAGES += qspa_system.rc qspa_default.rc
+
 #Android EGL implementation
 PRODUCT_PACKAGES += libGLES_android
 
@@ -259,10 +257,6 @@ PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE := true
 ifneq ($(strip $(TARGET_USES_RRO)),true)
 DEVICE_PACKAGE_OVERLAYS += device/qcom/qssi_tiny/overlay
 endif
-
-
-#Enable vndk-sp Libraries
-PRODUCT_PACKAGES += vndk_package
 
 PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE:=true
 
