@@ -42,6 +42,7 @@ BOARD_AVB_ENABLE := true
 
 #iot project variant flag for qti memory optimizations
 TARGET_HAS_QTI_OPTIMIZATIONS := true
+TARGET_QCOM_IOT_LOW_RAM := true
 TARGET_HAS_LOW_RAM := true
 
 #### Dynamic Partition Handling
