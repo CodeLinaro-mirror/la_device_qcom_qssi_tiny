@@ -8,6 +8,27 @@ TARGET_BOOTLOADER_BOARD_NAME := qssi
 # Opt out of 16K alignment changes
 PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
 
+#IOT platform
+TARGET_QCOM_IOT := true
+
+ifeq ($(TARGET_QCOM_IOT), true)
+
+#Enable low RAM optimizations
+TARGET_QCOM_IOT_LOW_RAM := true
+TARGET_HAS_QTI_OPTIMIZATIONS := true
+TARGET_HAS_LOW_RAM := true
+
+include device/qcom/iot-feature-config/iotfeatureconfig.mk
+
+endif
+
+#To be moved to iot-feature-config
+ifeq ($(TARGET_QCOM_IOT_LOW_RAM), true)
+
+TARGET_TELEPHONY_DATA_ONLY := true
+
+endif
+
 # Skip VINTF checks for kernel configs since we do not have kernel source
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 
@@ -106,10 +127,18 @@ $(call inherit-product, device/qcom/qssi_tiny/common64.mk)
 #Inherit all except heap growth limit from phone-xhdpi-2048-dalvik-heap.mk
 PRODUCT_PROPERTY_OVERRIDES  += \
      dalvik.vm.heapstartsize=8m \
+     dalvik.vm.heapminfree=512k
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM),true)
+PRODUCT_PROPERTY_OVERRIDES  += \
      dalvik.vm.heapsize=512m \
      dalvik.vm.heaptargetutilization=0.75 \
-     dalvik.vm.heapminfree=512k \
      dalvik.vm.heapmaxfree=8m
+else
+PRODUCT_PROPERTY_OVERRIDES  += \
+     dalvik.vm.heapsize=256m \
+     dalvik.vm.heaptargetutilization=0.85 \
+     dalvik.vm.heapmaxfree=6m
+endif #TARGET_QCOM_IOT_LOW_RAM
 
 
 PRODUCT_NAME := $(VENDOR_QTI_DEVICE)
@@ -127,8 +156,11 @@ TARGET_USES_QCOM_BSP := false
 # RRO configuration
 TARGET_USES_RRO := true
 
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM),true)
 TARGET_USES_NQ_NFC := true
-
+else
+TARGET_USES_NQ_NFC := false
+endif #TARGET_QCOM_IOT_LOW_RAM
 
 # default is nosdcard, S/W button enabled in resource
 PRODUCT_CHARACTERISTICS := nosdcard
@@ -217,8 +249,13 @@ PRODUCT_PACKAGES += \
     android.hardware.contexthub@1.0-service
 
 # system prop for enabling QFS (QTI Fingerprint Solution)
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM),true)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.qfp=true
+else
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.vendor.qfp=false
+endif #TARGET_QCOM_IOT_LOW_RAM
 
 PRODUCT_SYSTEM_PROPERTIES += \
     persist.device_config.runtime_native_boot.iorap_perfetto_enable=true
@@ -228,10 +265,12 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
 
 #PASR HAL and APP
+ifneq ($(TARGET_QCOM_IOT_LOW_RAM),true)
 PRODUCT_PACKAGES += \
     vendor.qti.power.pasrmanager@1.0-service \
     vendor.qti.power.pasrmanager@1.0-impl \
     pasrservice
+endif #TARGET_QCOM_IOT_LOW_RAM
 
 # Kernel modules install path
 KERNEL_MODULES_INSTALL := dlkm
