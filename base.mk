@@ -39,7 +39,7 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 TARGET_USE_VENDOR_CAMERA_EXT := true
 
 ifeq ($(TARGET_QCOM_IOT_LOW_RAM), true)
-BOARD_HAVE_QCOM_FM ?= false
+BOARD_HAVE_QCOM_FM := false
 else
 BOARD_HAVE_QCOM_FM ?= true
 endif #TARGET_QCOM_IOT_LOW_RAM
@@ -673,12 +673,10 @@ FD_LEAK := libc_leak_detector
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     Bluetooth \
-    DeskClock \
     AlarmProvider \
     Camera \
     CertInstaller \
     DrmProvider \
-    LatinIME \
     netutils-wrapper-1.0 \
     Provision \
     Protips \
@@ -699,6 +697,7 @@ PRODUCT_PACKAGES += \
     Calendar \
     Email \
     Gallery2 \
+    LatinIME \
     Music \
     QuickSearchBox \
     CalendarProvider \
@@ -721,7 +720,7 @@ else
             VisualizationWallpapers
 
     DELAUN := Launcher3
-endif
+endif #TARGET_HAS_LOW_RAM
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
