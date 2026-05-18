@@ -156,6 +156,8 @@ else
 TARGET_USES_NQ_NFC := false
 endif #TARGET_IS_QLMD
 
+TARGET_NO_GMS_PACKAGES := true
+
 # default is nosdcard, S/W button enabled in resource
 PRODUCT_CHARACTERISTICS := nosdcard
 BOARD_FRP_PARTITION_NAME := frp
