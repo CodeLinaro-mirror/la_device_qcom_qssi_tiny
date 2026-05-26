@@ -36,23 +36,18 @@ SHELL_WHITELIST = {
     "vendor/qcom/proprietary/commonsys/openclwrapper/Android.mk",
 }
 
-TARGET_OUT_HEADERS_WHITELIST = {
-}
-
 RM_WHITELIST = {
     "vendor/qcom/proprietary/common/scripts/Android.mk",
 }
 
 LOCAL_COPY_HEADERS_WHITELIST = {}
 
-KERNEL_OBJ_WHITELIST = {
-}
-
 DATETIME_WHITELIST = {}
 
 TARGET_PRODUCT_WHITELIST = {
     "vendor/qcom/opensource/core-utils/build/AndroidBoardCommon.mk",
     "vendor/qcom/opensource/core-utils/build/build.sh",
+    "vendor/qcom/opensource/core-utils/build/build_parallel.sh",
     "vendor/qcom/opensource/core-utils/build/build_image_standalone.py",
 }
 
